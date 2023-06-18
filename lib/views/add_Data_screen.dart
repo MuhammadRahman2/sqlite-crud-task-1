@@ -24,7 +24,10 @@ class _AddDataScreenState extends State<AddDataScreen> {
     final pickImage = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickImage != null) {
-      _imageFile = File(pickImage.path);
+      setState(() {
+        _imageFile = File(pickImage.path);
+      });
+
     }
   }
 
@@ -85,7 +88,12 @@ class _AddDataScreenState extends State<AddDataScreen> {
                         onPressed: (){
                           String imagePath = _imageFile!.path;
                           SqliteDatabaseHelper().insertUser(User(imageUrl: imagePath, name: nameController.text, phoneNumber: phoneController.text )).then((value) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Add data ${nameController.text}')));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Add data ${nameController.text}'), ));
+                            nameController.clear();
+                            phoneController.clear();
+                            setState(() {
+                              _imageFile!.path.isEmpty;
+                            });
                           });
 
                         }, child: const Text('Add Data', style: TextStyle(color: Colors.white),),)
