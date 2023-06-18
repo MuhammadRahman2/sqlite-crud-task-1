@@ -29,15 +29,30 @@ class SqliteDatabaseHelper {
     return userId;
   }
 
+
   Future<List<User>> getAllUsers() async {
     Database db = await getDatabase();
     List<Map<String, dynamic>> usersMaps = await db.query(_tableName);
     return List.generate(usersMaps.length, (index) {
-      return User(
-          id: usersMaps[index]["id"],
-          name: usersMaps[index]["name"],
-          phoneNumber: usersMaps[index]["phoneNumber"],
-          imageUrl: usersMaps[index]["imageUrl"]);
+      // return User(
+      //     id: usersMaps[index]["id"],
+      //     name: usersMaps[index]["name"],
+      //     phoneNumber: usersMaps[index]["phoneNumber"],
+      //     imageUrl: usersMaps[index]["imageUrl"]);
+    //  // or
+      return User.fromMap(usersMaps[index]);
     });
   }
+
+ Future<int> updateData(User user) async {
+    final Database db = await getDatabase();
+    return await db.update(_tableName, user.toMap(), where: 'id = ?', whereArgs: [user.id]);
+  }
+
+  Future<int> deleteData(int id) async {
+    final Database db = await getDatabase();
+    return await db.delete(_tableName, where: 'id = ?', whereArgs: [id]);
+  }
+
+
 }
